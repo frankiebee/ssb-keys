@@ -5,16 +5,15 @@ function isFunction (f) {
   return 'function' == typeof f
 }
 
-module.exports = function (generate) {
-
+module.exports = function (generate, encrypt = (s) => s, decrypt = (s) => s) {
   function create (filename, curve, legacy) {
     var keys = generate(curve, legacy)
-    localStorage[filename] = JSON.stringify(keys)
+    localStorage[filename] = encrypt(JSON.stringify(keys))
     return keys
   }
 
   function load (filename) {
-    return JSON.parse(localStorage[filename])
+    return JSON.parse(decrypt(localStorage[filename]))
   }
 
   return {
